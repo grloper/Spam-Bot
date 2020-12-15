@@ -1,0 +1,107 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Spam_Bot_by_Ofek_Ventura
+{
+    //Variables: int:ms string: convert,UpdateOFF,UpdateON
+    //Windows forms tools: btn=button,lbl=label,tmr=timer,Panel=Panel,tb=TextBox
+    public partial class Form1 : Form
+    {
+        public int ms,once;
+        public string convert = "", UpdateOFF = "OFF", UpdateON = "ON";
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            btnFirstStart.Text = "Click To Open\nThe Spam Bot";
+            lblWelcome.Text = "Welcome To My Spam-Bot My discord is:" + "\nofek#6143";
+            PanelAfter.Visible = false;
+            tmrUpdate.Start();
+            tbTEXT.Multiline = true;
+        }
+
+        private void btnFirstStart_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Turn Caps Lock OFF\nFor Best Performance");
+            PanelAfter.Visible = true;
+            PanelBefore.Visible = false;
+        }
+
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            if (tbMS.Text == "")
+                MessageBox.Show("You Need to write ms\nTo Continue Press ok");
+            else
+                tmrSpam.Start();  
+        }
+
+        private void tmrUpdate_Tick(object sender, EventArgs e)
+        {
+            if (tmrSpam.Enabled)
+            {
+                lblUpdate.Text = "Spam Update:";
+                lblUpdate.Text += UpdateON + " ms: " + ms;
+                tmrCountdown.Start();
+            }
+            else
+            {
+                lblUpdate.Text = "Spam Update:";
+                lblUpdate.Text += UpdateOFF + " ms: " + ms;
+                tmrCountdown.Stop();            }
+        }
+        private void tmrCountdown_Tick(object sender, EventArgs e)
+        {
+            once--;
+            lblTimeReamining.Text = "Time Reamining: ";
+            lblTimeReamining.Text += once;
+            if (once<=0)
+            {
+                once = ms / 1000;
+            }
+        }
+
+
+        private void tmrSpam_Tick(object sender, EventArgs e)
+        {
+            Int32.TryParse(tbMS.Text, out ms);
+            //when ms is 0 timer stop Because It's need to be int>0.
+            if (ms == 0)
+                ms = 1;
+            tmrSpam.Interval = ms;
+            SendKeys.Send(tbTEXT.Text);
+            SendKeys.Send("{Enter}");          
+        }
+
+
+
+        private void tbMS_TextChanged(object sender, EventArgs e)
+        {
+            Int32.TryParse(tbMS.Text, out ms);
+            once = ms;
+            once = once / 1000;
+            tmrCountdown.Start();
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            tmrSpam.Stop();
+            tmrCountdown.Stop();
+        }
+
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            PanelAfter.Visible = false;
+            PanelBefore.Visible = true;
+        }
+    }
+}
